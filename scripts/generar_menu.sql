@@ -1,3 +1,6 @@
+use cobis
+go
+
 declare @w_id_menu 		int,
 		@w_id_producto 	int,
 		@w_id_url 		varchar(300),
@@ -57,13 +60,13 @@ print 'id producto: '+convert(varchar(10), @w_id_producto)
 -- modificar me_name (nombre del menu)
 -- modificar me_descripcion (una breve explicacion de que hace el menu)
 insert into dbo.cew_menu (
-		me_id,			me_id_parent,	me_name,				me_visible,
-		me_url,			me_order,		me_id_cobis_product,	me_option,
-		me_description,		me_version,	me_container)
+		me_id,						me_id_parent,			me_name,						me_visible,
+		me_url,						me_order,				me_id_cobis_product,			me_option,
+		me_description,				me_version,				me_container)
 values (
-		@w_id_menu,		2895,			'MNU_JCRR_GRID_CLIENTE',		1,
-		@w_id_url,		1,				@w_id_producto,			0,
-		'JCRR listado clientes',	null,		'CWC')
+		@w_id_menu,					2895,					'MNU_JCRR_GRID_CLIENTE',		1,
+		@w_id_url,					1,						@w_id_producto,					0,
+		'JCRR listado clientes',	null,					'CWC')
 
 
 -- inserto la asociacion del rol al menu en la tabla cew_menu_role
