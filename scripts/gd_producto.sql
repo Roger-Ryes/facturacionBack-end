@@ -12,6 +12,8 @@ create table cobis..gd_producto(
 	pr_codigo		varchar(4),
 	pr_nombre		varchar(30),
 	pr_stock		int,
-	pr_precio		money
+	pr_precio		money,
+	pr_estado		varchar(1)
 )
 
+--select * from gd_producto
