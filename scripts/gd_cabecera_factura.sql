@@ -7,7 +7,7 @@ GO
 
 CREATE TABLE gd_cabecera_factura(
 
-	fr_codigo_secuencial 		 	int not null primary key,
+	fr_codigo_secuencial 		 	int not null,
 	fr_total						money,
 	fr_fecha						datetime,
 	cl_codigo						int	
