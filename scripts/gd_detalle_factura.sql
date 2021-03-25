@@ -8,7 +8,7 @@ GO
 
 CREATE TABLE gd_detalle_factura(
 
-	fr_codigo       int NOT NULL primary key,
+	fr_codigo       int NOT NULL,
 	pr_codigo		int,
 	pr_nombre		varchar(100),
 	pr_precio		money,
