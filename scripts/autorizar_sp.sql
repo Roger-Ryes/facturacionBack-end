@@ -99,11 +99,11 @@ VALUES
 
 
 select @w_pd_procedure 
---procedure		producto: 172101
---				cliente:  172126	
-select @w_pt_transaccion --7067
---transaccion	producto: 7067
---				cliente:  7067165
---SELECT * FROM ad_procedure where pd_stored_procedure like '%sp_cliente_gd%'
+select @w_pt_transaccion
 
+--procedure		producto: 172124
+--				cliente:  172126	
+
+--transaccion	producto: 7067164
+--			   	cliente:  7067165
 
