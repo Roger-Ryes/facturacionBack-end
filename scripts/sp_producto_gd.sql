@@ -7,25 +7,25 @@ if exists(select 1 from sysobjects where name='sp_producto_gd')
 go
 
 create procedure sp_producto_gd
-   @s_srv                   varchar(30) = null,
-   @s_ssn                   int         = null,
-   @s_date                  datetime    = null,
-   @s_ofi                   smallint    = null,
-   @s_user                  varchar(30) = null,
-   @s_rol		            smallint    = null,
-   @s_term		            varchar(10) = null,
-   @t_file		            varchar(14) = null,
-   @t_trn		   	        int			= null,
-   @t_debug              	char(1)     = 'N',
-   @t_from               	varchar(32) = null,
+   @s_srv                   varchar	 (30) = null,
+   @s_ssn                   int           = null,
+   @s_date                  datetime      = null,
+   @s_ofi                   smallint      = null,
+   @s_user                  varchar	 (30) = null,
+   @s_rol		            smallint      = null,
+   @s_term		            varchar	 (10) = null,
+   @t_file		            varchar	 (14) = null,
+   @t_trn		   	        int		      = null,
+   @t_debug              	char	 (1)  = 'N',
+   @t_from               	varchar	 (32) = null,
    --OPERACION
-   @i_operacion	   	        char(1),
+   @i_operacion	   	        char	 (1),
    --VARIABLES
-   @i_pr_codigo				varchar(4) 	= null,
-   @i_pr_nombre				varchar(30) = null,
-   @i_pr_stock				int			= null,
-   @i_pr_precio				money		= null,
-   @i_pr_estado				varchar(1)	='V'
+   @i_pr_codigo				varchar	 (4)  = null,
+   @i_pr_nombre				varchar	 (30) = null,
+   @i_pr_stock				int		  	  = null,
+   @i_pr_precio				money		  = null,
+   @i_pr_estado				varchar	 (1)  ='V'
 as
 declare
    @w_secuencia_inc	int,
