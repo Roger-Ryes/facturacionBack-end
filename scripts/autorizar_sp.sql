@@ -4,13 +4,17 @@ go
 declare @w_pd_procedure 	int,
 		@w_pt_transaccion 	int,
 		@w_id_rol			int,
-		@w_id_producto		int
-
+		@w_id_producto		int,
+		@w_name_procedure	varchar(50),
+		@w_name_archivo		varchar(50)
+--Asignar variables
+select 	@w_name_procedure 	= 'sp_cliente_gd',
+	 	@w_name_archivo 	= 'sp_cliente.sp'
 
 -- obtengo el pd_procedure (es posible que deba cambiar la pd_stored_procedure)
 select @w_pd_procedure = pd_procedure 
 from ad_procedure where 
-pd_stored_procedure ='sp_producto_gd'
+pd_stored_procedure = @w_name_procedure
 
 
 -- obtengo el id_rol (es posible que deba cambiar la descripcion)
@@ -49,7 +53,7 @@ begin
 	end
 	
 	delete ad_procedure 
-	where pd_stored_procedure='sp_producto_gd'
+	where pd_stored_procedure= @w_name_procedure
 end
 
 -- obtengo el maximo pd_proceduro y aumento en 1
@@ -58,14 +62,15 @@ from ad_procedure
 where pd_procedure between (@w_id_producto * 1000) and ((@w_id_producto + 1) * 1000)
 
 
+--CREAR SP
 -- inserto el sp
 insert into ad_procedure
 	(pd_procedure, 		pd_stored_procedure, 	pd_base_datos, 	pd_estado,
 	 pd_fecha_ult_mod, 	pd_archivo)
 values	
-	(@w_pd_procedure, 	'sp_producto_gd', 		'cobis', 		'V', 		
-	 getdate(), 		'sp_producto.sp')
-	 
+	(@w_pd_procedure, 	@w_name_procedure, 		'cobis', 		'V', 		
+	 getdate(), 		@w_name_archivo)
+	  
 
 -- obtengo el maximo pt_transaccion y aumento en 1
 select @w_pt_transaccion = max(pt_transaccion) + 1 
@@ -93,10 +98,12 @@ VALUES
 	 getdate())
 
 
-select @w_pd_procedure --172101
+select @w_pd_procedure 
+select @w_pt_transaccion
 
-select @w_pt_transaccion --7067
+--procedure		producto: 172124
+--				cliente:  172126	
 
-
-
+--transaccion	producto: 7067164
+--			   	cliente:  7067165
 
