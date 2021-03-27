@@ -69,9 +69,9 @@ begin
 	select @w_secuencia_inc = @w_secuencia_inc + 1
    
    	insert into gd_producto(
-   		pr_secuencia,	pr_codigo,	pr_nombre,	pr_stock,	pr_precio	)
+   		pr_secuencia,		pr_codigo,		pr_nombre,		pr_stock,		pr_precio,		pr_estado)
    	values(
-   		@w_secuencia_inc, @i_pr_codigo, @i_pr_nombre, @i_pr_stock, 	@i_pr_precio)
+   		@w_secuencia_inc, 	@i_pr_codigo, 	@i_pr_nombre, 	@i_pr_stock, 	@i_pr_precio, 	'V')
 end
 
 

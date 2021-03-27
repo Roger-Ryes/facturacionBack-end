@@ -8,12 +8,12 @@ begin
 end
 
 create table cobis..gd_producto(
-	pr_secuencia	int,
-	pr_codigo		varchar(4),
-	pr_nombre		varchar(30),
-	pr_stock		int,
-	pr_precio		money,
-	pr_estado		varchar(1)
+	pr_secuencia	int not null,
+	pr_codigo		varchar(4) not null,
+	pr_nombre		varchar(30) not null,
+	pr_stock		int not null,
+	pr_precio		money not null,
+	pr_estado		varchar(1) not null
 )
 
 --select * from gd_producto
