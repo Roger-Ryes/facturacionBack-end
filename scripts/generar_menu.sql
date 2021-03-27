@@ -7,7 +7,7 @@ declare @w_id_menu 		int,
 		@w_id_rol 		int
 
 -- modificar direccion
-select @w_id_url = 'views/FCTRC/FCTRS/T_FCTRCDNPYMMXS_543/1.0.0/VC_LISTACLINE_718543_TASK.html'
+select @w_id_url = null
 
 
 -- obtengo el id_menu en caso de que exista
@@ -17,11 +17,11 @@ select @w_id_menu = me_id from cew_menu where me_url = @w_id_url
 -- obtengo el id_rol (es posible que deba cambiar la descripcion)
 select @w_id_rol = ro_rol
 from ad_rol
-where ro_descripcion = 'SEMILLERO'
+where ro_descripcion = 'CAPACITACION'
 
 
 -- borro la asociacion del rol al menu en caso de existir 
-if @w_id_menu is not null and exists(select 1 from cew_menu_role where mro_id_menu = @w_id_menu and mro_id_role = @w_id_rol)
+if @w_id_url is not null and exists(select 1 from cew_menu_role where mro_id_menu = @w_id_menu and mro_id_role = @w_id_rol)
 begin
 	print 'borrando...'
 	delete from cew_menu_role where mro_id_menu = @w_id_menu and mro_id_role = @w_id_rol
@@ -29,7 +29,7 @@ end
 
 
 -- borro el menu en caso de existir de lo contrario obtengo el maximo id_menu y aumento 1
-if exists(select 1 from cew_menu where me_url = @w_id_url)
+if @w_id_url is not null and exists(select 1 from cew_menu where me_url = @w_id_url)
 begin
 	print 'borrando...'
 	delete from cew_menu where me_url = @w_id_url
@@ -37,10 +37,8 @@ end
 else
 begin
 	-- obtengo el maximo id_menu y aumento 1
-	select @w_id_menu = max(me_id)
+	select @w_id_menu = max(me_id)  + 1
 	from cew_menu
-	
-	select @w_id_menu = @w_id_menu + 1
 end
 
 
