@@ -132,7 +132,7 @@ begin
 end
 
 
---CONSULTA
+--CONSULTA POR CODIGO
 if @i_operacion = 'Q'
 begin
   	if @i_pr_codigo is null
@@ -146,10 +146,23 @@ begin
    	'codigo' 	= pr_codigo,
    	'nombre' 	= pr_nombre,
    	'stock' 	= pr_stock,
-   	'precio' 	= pr_precio,
-   	'estado'	= pr_estado
+   	'precio' 	= pr_precio
 	from gd_producto
 	where pr_codigo = @i_pr_codigo
+end
+
+
+--CONSULTA
+if @i_operacion = 'S'
+begin
+   select 
+   	'codigo' 	= pr_codigo,
+   	'nombre' 	= pr_nombre,
+   	'stock' 	= pr_stock,
+   	'precio' 	= pr_precio
+	from gd_producto
+	where pr_estado = 'V'
+	order by pr_secuencia
 end
 return 0
 
@@ -165,3 +178,5 @@ end
 return @w_error
 
 --select * from cl_errores where mensaje  like '%ingresar%'
+
+
