@@ -126,9 +126,7 @@ begin
    		update gd_producto 
    		set	pr_estado = 'D'
    		where pr_codigo = @i_pr_codigo   			
-   end
-	select * from gd_producto
-	
+   end	
 end
 
 
