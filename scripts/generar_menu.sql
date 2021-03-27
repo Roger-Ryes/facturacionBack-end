@@ -62,9 +62,9 @@ insert into dbo.cew_menu (
 		me_url,						me_order,				me_id_cobis_product,			me_option,
 		me_description,				me_version,				me_container)
 values (
-		@w_id_menu,					2895,					'MNU_JCRR_GRID_CLIENTE',		1,
-		@w_id_url,					1,						@w_id_producto,					0,
-		'JCRR listado clientes',	null,					'CWC')
+		@w_id_menu,					null,					'GRUPOD_FASE4',					1,
+		@w_id_url,					3,						@w_id_producto,					0,
+		'Taller grupo d',			null,					'CWC')
 
 
 -- inserto la asociacion del rol al menu en la tabla cew_menu_role
@@ -74,4 +74,4 @@ values (
 		@w_id_menu,		@w_id_rol)
 		
 
-select * from cew_menu where me_name = 'MNU_JEAN_RAVE' --2895
+select * from cew_menu where me_name = 'GRUPOD_FASE4' --3864
