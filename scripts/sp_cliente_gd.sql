@@ -26,7 +26,8 @@ create procedure sp_cliente_gd
    @i_cl_apellido			varchar(30)  = null,
    @i_cl_telefono			char(10)	 = null,
    @i_cl_direccion			varchar(200) = null,
-   @i_cl_estado				char(1)	 	 = 'V'
+   @i_cl_estado				char(1)	 	 = 'V',
+   @i_buscar_cli			varchar(30)	 = null
 as
 declare
    @w_secuencia_inc	int,
@@ -150,7 +151,7 @@ begin
 end
 
 
---CONSULTA POR CODIGO
+--CONSULTA POR NOMBRE O APELLIDO
 if @i_operacion = 'Q'
 begin
   	if @i_cl_cedula is null
@@ -164,10 +165,10 @@ begin
    	'nombre' 	= cl_nombre,
    	'apellido' 	= cl_apellido,
    	'telefono' 	= cl_telefono,
-   	'direccion'	= cl_direccion,
-   	'estado'	= cl_estado
+   	'direccion'	= cl_direccion
 	from gd_cliente
-	where cl_cedula = @i_cl_cedula
+	where 	cl_nombre 	= '%'+@i_buscar_cli+'%'
+	or		cl_apellido	= '%'+@i_buscar_cli+'%'
 end
 
 --CONSULTAR TODO
@@ -181,7 +182,7 @@ begin
    	'direccion'	= cl_direccion,
    	'estado'	= cl_estado
 	from gd_cliente
-	where cl_estado like '%V%'
+	where cl_estado like 'V'
 end
 return 0
 

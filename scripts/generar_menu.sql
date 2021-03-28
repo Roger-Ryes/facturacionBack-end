@@ -7,7 +7,7 @@ declare @w_id_menu 		int,
 		@w_id_rol 		int
 
 -- modificar direccion
-select @w_id_url = null
+select @w_id_url = ''
 
 
 -- obtengo el id_menu en caso de que exista
@@ -62,9 +62,9 @@ insert into dbo.cew_menu (
 		me_url,						me_order,				me_id_cobis_product,			me_option,
 		me_description,				me_version,				me_container)
 values (
-		@w_id_menu,					null,					'GRUPOD_FASE4',					1,
+		@w_id_menu,					3864,					'MDL_FACTURA',					1,
 		@w_id_url,					3,						@w_id_producto,					0,
-		'Taller grupo d',			null,					'CWC')
+		'Modulo facturacion',		null,					'CWC')
 
 
 -- inserto la asociacion del rol al menu en la tabla cew_menu_role
@@ -74,4 +74,4 @@ values (
 		@w_id_menu,		@w_id_rol)
 		
 
-select * from cew_menu where me_name = 'GRUPOD_FASE4' --3864
+select * from cew_menu where me_name = 'MDL_FACTURA' --3864
