@@ -1,5 +1,5 @@
 /*
- * Archivo: ProductosQuery_Q_PRODOSTU_JY78.java
+ * Archivo: VA_VABUTTONXXWLWDV_921369.java
  *
  * Esta aplicacion es parte de los paquetes bancarios propiedad de COBISCORP.
  * Su uso no autorizado queda expresamente prohibido asi como cualquier
@@ -11,9 +11,7 @@
  * o retencion y para perseguir penalmente a los autores de cualquier infraccion.
  */
 
-package com.cobiscorp.cobis.gdfct.customevents.impl.query.executequery;
-
-import java.util.List;
+package com.cobiscorp.cobis.gdfct.customevents.impl.view.executecommand;
 
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
@@ -21,57 +19,57 @@ import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.Service;
-
 import com.cobiscorp.cobis.commons.domains.log.ILogger;
 import com.cobiscorp.cobis.commons.log.LogFactory;
-import com.cobiscorp.cobis.gdfct.model.Productos;
 import com.cobiscorp.designer.api.DynamicRequest;
-import com.cobiscorp.designer.api.customization.IExecuteQuery;
-import com.cobiscorp.designer.api.customization.arguments.IExecuteQueryEventArgs;
+import com.cobiscorp.designer.api.customization.IExecuteCommand;
+import com.cobiscorp.designer.api.customization.arguments.IExecuteCommandEventArgs;
 import com.cobiscorp.designer.api.managers.DesignerManagerException;
 import com.cobiscorp.designer.bli.api.IBLIExecutor;
 
 @Component
-@Service({ IExecuteQuery.class })
-@Properties(value = { @Property(name = "query.id", value = "Q_PRODOSTU_JY78"),
-		@Property(name = "query.version", value = "1.0.0") })
+@Service({ IExecuteCommand.class })
+@Properties(value={
+		@Property(name = "view.id", value = "VW_PRODUCTORU_369"),
+		@Property(name = "view.version", value = "1.0.0"),
+		@Property(name = "view.controlId", value = "VA_VABUTTONXXWLWDV_921369")})
 
-public class ProductosQuery_Q_PRODOSTU_JY78 implements IExecuteQuery {
+public class VA_VABUTTONXXWLWDV_921369 implements IExecuteCommand {
 	/**
 	 * Instancia de Logger
 	 */
-	private static final ILogger logger = LogFactory.getLogger(ProductosQuery_Q_PRODOSTU_JY78.class);
+	private static final ILogger logger = LogFactory.getLogger(VA_VABUTTONXXWLWDV_921369.class);
 
-	@Reference(bind = "setBliListaProducto", 
-			unbind = "unsetBliListaProducto", 
+	@Reference(bind = "setBliActulizarProducto", 
+			unbind = "unsetBliActualizarProducto", 
 			cardinality = ReferenceCardinality.MANDATORY_UNARY, 
-			target = "(bli.id=BLI4656_bli_listarproductos)")
-	private IBLIExecutor bliListaProductos;
+			target = "(bli.id=BLI4292_bli_actualizarproducto)")
+	private IBLIExecutor bliActualizarProductos;
 
-	public void setBliListaProducto(IBLIExecutor bliListaProductos) {
-		this.bliListaProductos = bliListaProductos;
+	public void setBliActulizarProducto(IBLIExecutor bliActualizarProductos) {
+		this.bliActualizarProductos = bliActualizarProductos;
 	}
 
-	public void unsetBliListaProducto(IBLIExecutor bliListaProductos) {
-		this.bliListaProductos = null;
+	public void unsetBliActualizarProducto(IBLIExecutor bliActualizarProductos) {
+		this.bliActualizarProductos = null;
 	}
 
 	@Override
-	public List<?> executeDataEvent(DynamicRequest arg0, IExecuteQueryEventArgs arg1) {
+	public void executeCommand(DynamicRequest arg0, IExecuteCommandEventArgs arg1) {
+		// TODO Auto-generated method stub
 		try {
 			if (logger.isDebugEnabled()) {
-				logger.logDebug("Start executeDataEvent in ProductosQuery_Q_PRODOSTU_JY78");
-				logger.logDebug("Obteniendo los registros de la consulta...");
+				logger.logDebug("Start executeCommand in VA_VABUTTONXXWLWDV_921369");
+				logger.logDebug("Actualizando producto");
 			}
 			
-			bliListaProductos.execute(arg0);
+			bliActualizarProductos.execute(arg0);
+			logger.logDebug("Ejucicion finalizada...");
 			
-			logger.logDebug("Registros obtenidos...");
 		} catch (Exception ex) {
 			DesignerManagerException.handleException(arg1.getMessageManager(), ex, logger);
 		}
-
-		return arg0.getEntityList(Productos.ENTITY_NAME).getDataList();
 	}
 
 }
+
