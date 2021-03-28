@@ -17,7 +17,7 @@ create procedure sp_gd_facturacion
    @t_trn		   	        int			= null,
    @t_debug              	char(1)     = 'N',
    @t_from               	varchar(32) = null,
-   @i_codigo_cliente		int 		= null,
+   @i_cedula_cliente		int 		= null,
    @i_total					money 		= 0,
    @i_estado				varchar(1) 	= 'V',
    @i_operacion				char(1),
@@ -42,7 +42,12 @@ select @w_sp_name = 'sp_gd_facturacion'
 
 if @i_operacion = 'Q'  
 begin
-    
+	if @i_cf_codigo is not null
+	begin
+		delete from gd_detalle_factura where df_codigo_factura = @i_cf_codigo
+		delete from gd_cabecera_factura where cf_codigo = @i_cf_codigo
+	end
+	
 	
 	select @w_codigo_cf=max(cf_codigo) 
 	from gd_cabecera_factura
@@ -53,14 +58,12 @@ begin
 	select @w_codigo_cf = @w_codigo_cf + 1
 	
 	
-  
-		print '---- Insertando en cabecera_factura '
-		insert into gd_cabecera_factura (cf_codigo)
-		values					     (@w_codigo_cf)	
-
-		SELECT 'Codigo factura' = cf_codigo
-		from gd_cabecera_factura
-		where cf_codigo =  @w_codigo_cf
+	print '---- Insertando en cabecera_factura '
+	insert into gd_cabecera_factura 
+		  (cf_codigo, 		cf_total,	cf_estado)
+	values					     
+		  (@w_codigo_cf, 	0,			@i_estado)	
+		
 		
 	select @o_codigo = @w_codigo_cf
 end
@@ -71,78 +74,98 @@ end
 
 if @i_operacion = 'I'
 begin
-    
-	
-	
-	if exists(select 1 from gd_cliente where cl_secuencial = @i_codigo_cliente)
+	if exists(select 1 from gd_cliente where cl_cedula = @i_cedula_cliente)
 	begin
 		print '---- Insertando en cabecera_factura '
 		update gd_cabecera_factura 
-		set cf_codigo_cliente 	= @i_codigo_cliente,
-			cf_fecha		  	= getdate(),
-			cf_total			= @i_total,
-			cf_estado			= @i_estado
-			where 
+		set cf_cedula_cliente 	= @i_cedula_cliente
+		where 
 			cf_codigo 			= @i_cf_codigo
 	end
-		
-	select @o_codigo = @w_codigo_cf
 end
 
 --insertar detalles de factura
 
 if @i_operacion = 'D'
 begin
-
-   			select @w_pr_precio = pr_precio from gd_producto where pr_secuencia = @i_pr_codigo
-			select @w_subtotal = @i_cantidad * @w_pr_precio
-	 		print '---- Insertando en detalle_factura '
-	  		insert into gd_detalle_factura (df_codigo_producto, df_codigo_factura, df_cantidad, df_subtotal)
-			values						 (@i_pr_codigo,@i_cf_codigo, @i_cantidad, @w_subtotal)		
-   		   	
-   		   	--Sumando el subtotal al total de la factura
-			select @w_total = sum(df.df_subtotal)
-			from gd_detalle_factura df, gd_cabecera_factura cf
-			where df.df_codigo_factura = cf.cf_codigo
-			
-			--Actualizando el  total de la factura
-			update gd_cabecera_factura
-			set cf_total = @w_total
-			where cf_codigo = @i_cf_codigo
-			
-	select @o_codigo = @w_codigo_cf
-end
-
-
---consultar factura
-if @i_operacion = 'S'
-begin
-   
+  	if @i_pr_codigo is null
+    begin
+      select @w_error =  1720497 
+      goto ERROR_FIN
+	end
 	
-	SELECT 
-	    'Cliente codigo' = cf_codigo_cliente,
-	    'Fecha creacion' = cf_fecha,
-		'Factura codigo' = cf_codigo,
-		'Factura total'  = cf_total
-	FROM dbo.gd_cabecera_factura
-	Where @i_cf_codigo = cf_codigo
+	if @i_cantidad is null
+	begin
+      select @w_error =  1720609 
+      goto ERROR_FIN
+	end	
+	
+	select @i_pr_codigo = pr_secuencia from gd_producto where pr_codigo = @i_pr_codigo
+	
+	if @i_pr_codigo is not null
+	begin
+		if exists(select 1 from gd_producto where pr_stock < @i_cantidad and pr_secuencia = @i_pr_codigo)
+		begin
+	      select @w_error =  1720608 
+	      goto ERROR_FIN
+		end
 
-   			
-	select @o_codigo = @w_codigo_cf
+		select @w_pr_precio = pr_precio from gd_producto where pr_secuencia = @i_pr_codigo		
+		select @w_subtotal = @i_cantidad * @w_pr_precio
+		
+		if exists(select 1 from gd_detalle_factura where df_codigo_producto = @i_pr_codigo and df_codigo_factura = @i_cf_codigo)
+		begin
+		
+			print '---- actualizando en detalle_factura '
+			update gd_detalle_factura
+			set 	df_cantidad 		= @i_cantidad,
+					df_subtotal 		= @w_subtotal
+			where	df_codigo_producto	= @i_pr_codigo
+			and		df_codigo_factura 	= @i_cf_codigo
+		end
+		else
+		begin
+
+			print '---- Insertando en detalle_factura '
+			insert into gd_detalle_factura 
+				  (df_codigo_producto, 	df_codigo_factura, 	df_cantidad, 	df_subtotal)
+			values						 
+				  (@i_pr_codigo,		@i_cf_codigo, 		@i_cantidad, 	@w_subtotal)		
+		end
+		
+		
+		--obteniendo el total de la factura
+		select @w_total = sum(df_subtotal)
+		from gd_detalle_factura
+		where df_codigo_factura = @i_cf_codigo
+			
+		--Actualizando el  total de la factura
+		update gd_cabecera_factura
+		set cf_total = @w_total
+		where cf_codigo = @i_cf_codigo
+		
+	end
+	else
+	begin
+      select @w_error =  1720516
+      goto ERROR_FIN
+	end
 end
+
 --consultar detalles de factura
 if @i_operacion = 'R'
 begin
-	SELECT 
-	    'Producto codigo' 	= df_codigo_producto,
-	    'Nombre'			= (select pr_nombre from gd_producto where pr_secuencia = df_codigo_producto),--obtener el nombre del producto
-		'Cantidad'		 	= df_cantidad,
-		'Subtotal' 		 	= df_subtotal
-	FROM gd_detalle_factura 
-	Where @i_cf_codigo = df_codigo_factura 
-	select @o_codigo = @w_codigo_cf
+	select 
+	    'codigoProducto' 	= pr_codigo,
+	    'Producto'			= pr_nombre,
+		'Precio'		 	= pr_precio,
+		'Cantidad' 		 	= df_cantidad,
+		'SubTotal'			= df_subtotal
+		
+	from gd_detalle_factura
+	inner join gd_producto on gd_detalle_factura.df_codigo_producto = gd_producto.pr_secuencia
+	Where df_codigo_factura = @i_cf_codigo
 end
-
 
 return 0
 ERROR_FIN:
