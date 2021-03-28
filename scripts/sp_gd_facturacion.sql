@@ -40,11 +40,11 @@ select @w_sp_name = 'sp_gd_facturacion'
 
 --insertar una cabecera de factura
 
-if @i_operacion = 'I'
+if @i_operacion = 'Q'  
 begin
     
 	
-	select @w_codigo_cf=max(@w_codigo_cf) 
+	select @w_codigo_cf=max(cf_codigo) 
 	from gd_cabecera_factura
 	
 	if @w_codigo_cf is null
@@ -53,11 +53,37 @@ begin
 	select @w_codigo_cf = @w_codigo_cf + 1
 	
 	
+  
+		print '---- Insertando en cabecera_factura '
+		insert into gd_cabecera_factura (cf_codigo)
+		values					     (@w_codigo_cf)	
+
+		SELECT 'Codigo factura' = cf_codigo
+		from gd_cabecera_factura
+		where cf_codigo =  @w_codigo_cf
+		
+	select @o_codigo = @w_codigo_cf
+end
+
+
+
+---------------------------------------------------------------
+
+if @i_operacion = 'I'
+begin
+    
+	
+	
 	if exists(select 1 from gd_cliente where cl_secuencial = @i_codigo_cliente)
 	begin
 		print '---- Insertando en cabecera_factura '
-		insert into gd_cabecera_factura (cf_codigo, cf_codigo_cliente, cf_fecha, cf_total, cf_estado)
-		values					     (@w_codigo_cf, @i_codigo_cliente,getdate(), @i_total, @i_estado)	
+		update gd_cabecera_factura 
+		set cf_codigo_cliente 	= @i_codigo_cliente,
+			cf_fecha		  	= getdate(),
+			cf_total			= @i_total,
+			cf_estado			= @i_estado
+			where 
+			cf_codigo 			= @i_cf_codigo
 	end
 		
 	select @o_codigo = @w_codigo_cf
