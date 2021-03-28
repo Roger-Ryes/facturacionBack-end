@@ -60,6 +60,12 @@ begin
       goto ERROR_FIN
 	end
    
+    if exists(select 1 from gd_producto where pr_codigo = @i_pr_codigo)
+    begin
+      select @w_error =  1720529 
+      goto ERROR_FIN   
+    end
+   
    	select @w_secuencia_inc=max(pr_secuencia) 
 	from gd_producto
 	
