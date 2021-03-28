@@ -147,7 +147,6 @@ begin
    	'direccion'	= cl_direccion,
    	'estado'	= cl_estado
 	from gd_cliente
-	
 end
 
 
